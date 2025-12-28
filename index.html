@@ -120,9 +120,9 @@
     //    Beispiel (PLATZHALTER):
     // -----------------------------
     const firebaseConfig = {
-      apiKey: "REPLACE_WITH_YOUR_API_KEY",
-      authDomain: "REPLACE_WITH_YOUR_PROJECT.firebaseapp.com",
-      projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
+    apiKey: "AIzaSyAzLiT6zrh9SCLyun_YTc6cSlmzt1Ac7NQ",
+      authDomain: "auth-6aeb3.firebaseapp.com",
+      projectId: "auth-6aeb3"
       // Optional, aber empfohlen (für Hosting/Storage/etc.)
       // storageBucket: "...",
       // messagingSenderId: "...",
@@ -152,33 +152,24 @@
     const googleBtn = document.getElementById('googleBtn');
 
     // Hilfsfunktion: Benutzerinfo in die UI schreiben
-    function renderUser(user) {
-      if (!user) {
-        statusEl.textContent = 'Nicht verbunden';
-        userEl.textContent = 'Kein Benutzer angemeldet';
-        verifyBox.style.display = 'none';
-        return;
-      }
-/*
-      statusEl.textContent = 'Angemeldet';
-      userEl.innerHTML = `
-        <strong>UID:</strong> ${user.uid}<br>
-        <strong>E‑Mail:</strong> ${user.email || '—'}<br>
-        <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
-      `;
-*/
-      // Zeige Hinweis, wenn E‑Mail noch nicht bestätigt ist
-      verifyBox.style.display = user.emailVerified ? 'none' : 'block';
-    
+function renderUser(user) {
+  if (!user) {
+    statusEl.textContent = 'Nicht verbunden';
+    userEl.textContent = 'Kein Benutzer angemeldet';
+    verifyBox.style.display = 'none';
+    return;
+  }
 
-      // Zeige einige nützliche Informationen (UID, E‑Mail, ob verifiziert)
-      statusEl.textContent = 'Angemeldet';
-      userEl.innerHTML = `
-        <strong>UID:</strong> ${user.uid} <br>
-        <strong>E‑Mail:</strong> ${user.email || '—'} <br>
-        <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
-      `;
-    }
+  statusEl.textContent = 'Angemeldet';
+  userEl.innerHTML = `
+    <strong>UID:</strong> ${user.uid}<br>
+    <strong>E-Mail:</strong> ${user.email || '—'}<br>
+    <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
+  `;
+
+  // Hinweis anzeigen, wenn nicht verifiziert
+  verifyBox.style.display = user.emailVerified ? 'none' : 'block';
+}
 
     // -----------------------------
     // 5) Auth-Funktionen: Registrieren, Einloggen, Google, Abmelden
