@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Firebase (5x) Auth Demo — Einfach & mobil</title>
+  <title>Firebase (5xy) Auth Demo — Einfach & mobil</title>
   <style>
     /* ================================
        Design-System mit CSS-Variablen
@@ -159,14 +159,14 @@
         verifyBox.style.display = 'none';
         return;
       }
-/*
+
       statusEl.textContent = 'Angemeldet';
       userEl.innerHTML = `
         <strong>UID:</strong> ${user.uid}<br>
         <strong>E‑Mail:</strong> ${user.email || '—'}<br>
         <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
       `;
-*/
+
       // Zeige Hinweis, wenn E‑Mail noch nicht bestätigt ist
       verifyBox.style.display = user.emailVerified ? 'none' : 'block';
     }
