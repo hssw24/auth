@@ -82,8 +82,7 @@
       signOut,
       GoogleAuthProvider,
       signInWithPopup,
-      onAuthStateChanged,
-      sendEmailVerification
+      onAuthStateChanged
     } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
     // -----------------------------
@@ -147,8 +146,6 @@
 
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        // Nach der Registrierung eine Bestätigungs‑Mail senden
-        await sendEmailVerification(cred.user);
         console.log('Registriert:', cred.user);
         alert('Registrierung erfolgreich — du bist angemeldet.');
       } catch (err) {
