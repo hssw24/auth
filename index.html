@@ -233,7 +233,7 @@
         alert('Fehler beim Passwort-Reset: ' + err.message);
       }
     });
-      if (!email) return alert('Bitte gib deine E-Mail-Adresse ein.');
+      if (!email) return alert('Bitte Email und Passwort eingeben.');
 
       try {
         await sendPasswordResetEmail(auth, email);
