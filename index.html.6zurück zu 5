@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Firebase Auth Demo — Einfach & mobil</title>
+  <title>Firebase 5 Auth Demo — Einfach & mobil</title>
   <style>
     /* ================================
        Design-System mit CSS-Variablen
@@ -152,33 +152,24 @@
     const googleBtn = document.getElementById('googleBtn');
 
     // Hilfsfunktion: Benutzerinfo in die UI schreiben
-    function renderUser(user) {
-      if (!user) {
-        statusEl.textContent = 'Nicht verbunden';
-        userEl.textContent = 'Kein Benutzer angemeldet';
-        verifyBox.style.display = 'none';
-        return;
-      }
+function renderUser(user) {
+  if (!user) {
+    statusEl.textContent = 'Nicht verbunden';
+    userEl.textContent = 'Kein Benutzer angemeldet';
+    verifyBox.style.display = 'none';
+    return;
+  }
 
-      statusEl.textContent = 'Angemeldet';
-      userEl.innerHTML = `
-        <strong>UID:</strong> ${user.uid}<br>
-        <strong>E‑Mail:</strong> ${user.email || '—'}<br>
-        <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
-      `;
+  statusEl.textContent = 'Angemeldet';
+  userEl.innerHTML = `
+    <strong>UID:</strong> ${user.uid}<br>
+    <strong>E-Mail:</strong> ${user.email || '—'}<br>
+    <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
+  `;
 
-      // Zeige Hinweis, wenn E‑Mail noch nicht bestätigt ist
-      verifyBox.style.display = user.emailVerified ? 'none' : 'block';
-    }
-
-      // Zeige einige nützliche Informationen (UID, E‑Mail, ob verifiziert)
-      statusEl.textContent = 'Angemeldet';
-      userEl.innerHTML = `
-        <strong>UID:</strong> ${user.uid} <br>
-        <strong>E‑Mail:</strong> ${user.email || '—'} <br>
-        <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
-      `;
-    
+  // Hinweis anzeigen, wenn nicht verifiziert
+  verifyBox.style.display = user.emailVerified ? 'none' : 'block';
+}
 
     // -----------------------------
     // 5) Auth-Funktionen: Registrieren, Einloggen, Google, Abmelden
@@ -217,6 +208,22 @@
 
     resetBtn.addEventListener('click', async () => {
       const email = emailInput.value.trim();
+      if (!email) return alert('Bitte gib deine E-Mail-Adresse ein.');
+
+      try {
+        // Sicherheits‑Check: existiert diese E‑Mail überhaupt?
+        const methods = await fetchSignInMethodsForEmail(auth, email);
+        if (methods.length === 0) {
+          alert('Für diese E-Mail existiert kein Konto.');
+          return;
+        }
+
+        await sendPasswordResetEmail(auth, email);
+        alert('Passwort-Reset-Mail wurde gesendet.');
+      } catch (err) {
+        alert('Fehler beim Passwort-Reset: ' + err.message);
+      }
+//    });
       if (!email) return alert('Bitte gib deine E-Mail-Adresse ein.');
 
       try {
