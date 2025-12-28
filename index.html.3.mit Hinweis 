@@ -47,7 +47,7 @@
 </head>
 <body>
   <main class="card" role="main">
-    <h1>Firebase Auth — Testseite</h1>
+    <h1>Firebase Auth 1326 — Testseite</h1>
     <p class="lead">Klein, mobil-optimiert und kommentiert — ideal zum Ausprobieren von Email/Passwort &amp; Google Login.</p><!-- Status und Benutzeranzeige -->
 <div id="status" class="small">Nicht verbunden</div>
 
@@ -176,7 +176,7 @@
         <strong>E‑Mail:</strong> ${user.email || '—'} <br>
         <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
       `;
-    }
+    
 
     // -----------------------------
     // 5) Auth-Funktionen: Registrieren, Einloggen, Google, Abmelden
@@ -247,18 +247,8 @@
     // -----------------------------
     // 6) Beobachte Auth-Status und aktualisiere UI automatisch
     // -----------------------------
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
       renderUser(user);
-
-      // Schritt 2: Login‑Sperre für nicht verifizierte Nutzer
-      // --------------------------------------------------
-      // Idee: Ein Login ist technisch erlaubt, aber die App
-      // lässt den Nutzer NICHT drin, solange die E‑Mail
-      // nicht bestätigt wurde.
-      if (user && !user.emailVerified) {
-        alert('Bitte bestätige zuerst deine E‑Mail-Adresse.');
-        await signOut(auth);
-      }
     });
 
     // Optional: Vorbefüllung beim lokalen Test (nur zu Demo-Zwecken, entfernen für Produktion)
