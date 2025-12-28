@@ -1,0 +1,203 @@
+<!doctype html>
+
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Firebase Auth Demo — Einfach & mobil</title>
+  <style>
+    /* Einfaches, mobiles Styling */
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0}
+    body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:#f7fafc;color:#0f172a}
+    .card{width:100%;max-width:480px;background:white;border-radius:14px;padding:18px;box-shadow:0 6px 18px rgba(2,6,23,0.08)}
+    h1{font-size:20px;margin:0 0 8px}
+    p.lead{margin:0 0 16px;color:#475569;font-size:14px}
+    label{display:block;font-size:13px;margin-top:12px}
+    input[type="email"],input[type="password"]{width:100%;padding:12px;border-radius:8px;border:1px solid #e2e8f0;margin-top:6px;font-size:15px}
+    .btn{display:inline-block;width:100%;padding:12px;border-radius:10px;border:0;font-size:15px;margin-top:12px}
+    .btn-primary{background:#2563eb;color:white}
+    .btn-ghost{background:transparent;border:1px solid #cbd5e1;color:#0f172a}
+    .row{display:flex;gap:8px}
+    .small{font-size:13px;color:#64748b;margin-top:8px}
+    .user-info{margin-top:14px;padding:12px;border-radius:8px;background:#f1f5f9}
+    .center{text-align:center}
+    footer{margin-top:16px;font-size:12px;color:#94a3b8}
+    @media (prefers-color-scheme:dark){body{background:#0b1220;color:#e6eef8}.card{background:#071023;box-shadow:none}.btn-ghost{border-color:#102036}}
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <h1>Firebase Auth — Testseite</h1>
+    <p class="lead">Klein, mobil-optimiert und kommentiert — ideal zum Ausprobieren von Email/Passwort &amp; Google Login.</p><!-- Status und Benutzeranzeige -->
+<div id="status" class="small">Nicht verbunden</div>
+
+<!-- Email/Passwort: Anmeldung / Registrierung -->
+<form id="auth-form" onsubmit="return false;">
+  <label for="email">E‑Mail</label>
+  <input id="email" type="email" placeholder="name@beispiel.de" autocomplete="email" required />
+
+  <label for="password">Passwort</label>
+  <input id="password" type="password" placeholder="mind. 6 Zeichen" autocomplete="current-password" required />
+
+  <div class="row">
+    <button id="signupBtn" class="btn btn-ghost" type="button">Registrieren</button>
+    <button id="signinBtn" class="btn btn-primary" type="button">Einloggen</button>
+  </div>
+</form>
+
+<div style="margin-top:12px">
+  <button id="googleBtn" class="btn btn-ghost" type="button">Mit Google anmelden</button>
+</div>
+
+<div id="user" class="user-info" aria-live="polite">Kein Benutzer angemeldet</div>
+
+<div style="display:flex;gap:8px;margin-top:10px">
+  <button id="signoutBtn" class="btn btn-ghost" style="flex:1" type="button">Abmelden</button>
+</div>
+
+<footer class="center">Hinweis: Füge deine Firebase-Konfiguration unten in das Skript ein und aktiviere die Sign‑In Methoden in der Firebase Console.</footer>
+
+  </main>  <!--
+    Wichtiger Hinweis für Anfänger (kurz):
+    1) Erstelle ein Firebase-Projekt unter https://console.firebase.google.com
+    2) Registriere eine Web-App und kopiere die Firebase-Konfiguration (apiKey, authDomain, ...)
+    3) Aktiviere in der Console Email/Password und Google Sign-In (Auth → Sign-in method)
+    4) Füge die Konfiguration in `firebaseConfig` weiter unten ein
+
+    Offizielle Guides:
+    - Firebase Web setup (modular SDK): https://firebase.google.com/docs/web/setup
+    - Email/Password Auth: https://firebase.google.com/docs/auth/web/password-auth
+    - Google Sign-In: https://firebase.google.com/docs/auth/web/google-signin
+  -->  <script type="module">
+    // -----------------------------
+    // 1) Importiere Firebase (modular SDK) über CDN
+    //    Das Beispiel nutzt die JS SDK als ES Module (funktioniert in modernen Browsern/Handys).
+    //    Vorteil: aktuell, schlanker als die alten "namespaced"-SDKs.
+    // -----------------------------
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      GoogleAuthProvider,
+      signInWithPopup,
+      onAuthStateChanged
+    } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+
+    // -----------------------------
+    // 2) Firebase-Konfiguration
+    //    Ersetze die Werte hier mit deiner Konfiguration aus der Firebase Console (Web-App registrieren).
+    //    Beispiel (PLATZHALTER):
+    // -----------------------------
+    const firebaseConfig = {
+    apiKey: "AIzaSyAzLiT6zrh9SCLyun_YTc6cSlmzt1Ac7NQ",
+      authDomain: "auth-6aeb3.firebaseapp.com",
+      projectId: "auth-6aeb3"
+      // Optional, aber empfohlen (für Hosting/Storage/etc.)
+      // storageBucket: "...",
+      // messagingSenderId: "...",
+      // appId: "..."
+    };
+
+    // -----------------------------
+    // 3) Initialisiere Firebase & Auth
+    // -----------------------------
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    // -----------------------------
+    // 4) Elemente aus dem DOM
+    // -----------------------------
+    const statusEl = document.getElementById('status');
+    const userEl = document.getElementById('user');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const signupBtn = document.getElementById('signupBtn');
+    const signinBtn = document.getElementById('signinBtn');
+    const signoutBtn = document.getElementById('signoutBtn');
+    const googleBtn = document.getElementById('googleBtn');
+
+    // Hilfsfunktion: Benutzerinfo in die UI schreiben
+    function renderUser(user) {
+      if (!user) {
+        statusEl.textContent = 'Nicht verbunden';
+        userEl.innerHTML = 'Kein Benutzer angemeldet';
+        return;
+      }
+
+      // Zeige einige nützliche Informationen (UID, E‑Mail, ob verifiziert)
+      statusEl.textContent = 'Angemeldet';
+      userEl.innerHTML = `
+        <strong>UID:</strong> ${user.uid} <br>
+        <strong>E‑Mail:</strong> ${user.email || '—'} <br>
+        <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
+      `;
+    }
+
+    // -----------------------------
+    // 5) Auth-Funktionen: Registrieren, Einloggen, Google, Abmelden
+    // -----------------------------
+    signupBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) return alert('Bitte Email und Passwort eingeben.');
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        console.log('Registriert:', cred.user);
+        alert('Registrierung erfolgreich — du bist angemeldet.');
+      } catch (err) {
+        console.error(err);
+        alert('Fehler bei Registrierung: ' + err.message);
+      }
+    });
+
+    signinBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) return alert('Bitte Email und Passwort eingeben.');
+
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        console.log('Eingeloggt:', cred.user);
+        alert('Erfolgreich eingeloggt.');
+      } catch (err) {
+        console.error(err);
+        alert('Fehler beim Einloggen: ' + err.message);
+      }
+    });
+
+    googleBtn.addEventListener('click', async () => {
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        // result.user enthält die angemeldeten Benutzerdaten
+        console.log('Google login:', result.user);
+      } catch (err) {
+        console.error(err);
+        alert('Fehler bei Google Anmeldung: ' + err.message);
+      }
+    });
+
+    signoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        alert('Abgemeldet');
+      } catch (err) {
+        console.error(err);
+        alert('Fehler beim Abmelden: ' + err.message);
+      }
+    });
+
+    // -----------------------------
+    // 6) Beobachte Auth-Status und aktualisiere UI automatisch
+    // -----------------------------
+    onAuthStateChanged(auth, (user) => {
+      renderUser(user);
+    });
+
+    // Optional: Vorbefüllung beim lokalen Test (nur zu Demo-Zwecken, entfernen für Produktion)
+    // emailInput.value = 'test@example.com';
+  </script></body>
+</html>
