@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Firebase Auth (8!!!) — Demo (optimiert)</title>
+  <title>Firebase Auth – Demo</title>
+
   <style>
     :root{
-      --bg:#f7fafc; --card:#fff; --text:#0f172a; --muted:#475569;
+      --bg:#f7fafc; --card:#ffffff; --text:#0f172a; --muted:#475569;
       --border:#e2e8f0; --primary:#2563eb; --info:#f1f5f9;
     }
     @media (prefers-color-scheme:dark){
@@ -15,60 +16,94 @@
         --border:#102036; --primary:#3b82f6; --info:#0f1a33;
       }
     }
-    body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto}
-    .card{width:100%;max-width:480px;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 6px 18px rgba(2,6,23,0.08)}
-    h1{font-size:20px;margin:0 0 8px} .lead{margin:0 0 16px;color:var(--muted);font-size:14px}
-    label{display:block;font-size:13px;margin-top:12px} input{width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);margin-top:6px;font-size:15px;background:transparent;color:var(--text)}
-    .btn{width:100%;padding:12px;border-radius:10px;border:0;font-size:15px;margin-top:12px}
-    .btn-primary{background:var(--primary);color:white} .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
-    .row{display:flex;gap:8px} .small{font-size:13px;color:var(--muted);margin-top:8px}
-    .user-info{margin-top:14px;padding:12px;border-radius:8px;background:var(--info)}
-    footer{margin-top:16px;font-size:12px;color:var(--muted);text-align:center}
+    body{
+      margin:0; min-height:100vh;
+      display:flex; justify-content:center; align-items:flex-start;
+      padding:20px;
+      background:var(--bg); color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto;
+    }
+    .card{
+      width:100%; max-width:480px;
+      background:var(--card);
+      border-radius:14px;
+      padding:18px;
+      box-shadow:0 6px 18px rgba(0,0,0,.1);
+    }
+    h1{margin:0 0 8px;font-size:20px}
+    .lead{margin:0 0 16px;color:var(--muted);font-size:14px}
+    label{display:block;margin-top:12px;font-size:13px}
+    input{
+      width:100%; padding:12px;
+      margin-top:6px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      font-size:15px;
+    }
+    .btn{
+      width:100%; padding:12px;
+      border-radius:10px;
+      margin-top:12px;
+      font-size:15px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+    }
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+      border:none;
+    }
+    .row{display:flex;gap:8px}
+    .small{font-size:13px;color:var(--muted);margin-top:8px}
+    .user-info{
+      margin-top:14px;
+      padding:12px;
+      background:var(--info);
+      border-radius:8px;
+    }
   </style>
 </head>
+
 <body>
-  <main class="card" role="main">
-    <h1>Firebase Auth 7 — Testseite</h1>
-    <p class="lead">Mobil optimiert — Email/Passwort, Google, Verifikation & Reset.</p>
+  <main class="card">
+    <h1>Firebase Auth – Demo</h1>
+    <p class="lead">Einfach, mobil & vollständig kommentiert</p>
 
     <div id="status" class="small">Nicht verbunden</div>
 
-    <form id="auth-form" onsubmit="return false;">
-      <label for="email">E-Mail</label>
-      <input id="email" type="email" placeholder="name@beispiel.de" autocomplete="email" required />
-      <label for="password">Passwort</label>
-      <input id="password" type="password" placeholder="mind. 6 Zeichen" autocomplete="current-password" required />
+    <!-- Auth-Form -->
+    <form id="authForm" onsubmit="return false;">
+      <label>E-Mail</label>
+      <input type="email" name="email" placeholder="name@beispiel.de" required>
+
+      <label>Passwort</label>
+      <input type="password" name="password" placeholder="mind. 6 Zeichen" required>
 
       <div class="row">
-        <button id="signupBtn" class="btn btn-ghost" type="button">Registrieren</button>
+        <button id="signupBtn" class="btn" type="button">Registrieren</button>
         <button id="signinBtn" class="btn btn-primary" type="button">Einloggen</button>
       </div>
-      <button id="resetBtn" class="btn btn-ghost" type="button">Passwort vergessen?</button>
+
+      <button id="resetBtn" class="btn" type="button">Passwort vergessen?</button>
     </form>
 
-    <div style="margin-top:12px">
-      <button id="googleBtn" class="btn btn-ghost" type="button">Mit Google anmelden</button>
-    </div>
+    <button id="googleBtn" class="btn">Mit Google anmelden</button>
 
-    <div id="user" class="user-info" aria-live="polite">Kein Benutzer angemeldet</div>
+    <div id="userInfo" class="user-info">Kein Benutzer angemeldet</div>
 
     <div id="verifyBox" class="small" style="display:none">
       Deine E-Mail ist noch nicht bestätigt.
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button id="resendBtn" class="btn btn-ghost" type="button">Bestätigungs-Mail erneut senden</button>
-        <button id="checkVerifiedBtn" class="btn btn-primary" type="button">Ich habe bestätigt</button>
-      </div>
+      <button id="resendBtn" class="btn">Bestätigungs-Mail erneut senden</button>
     </div>
 
-    <div style="display:flex;gap:8px;margin-top:10px">
-      <button id="signoutBtn" class="btn btn-ghost" style="flex:1" type="button">Abmelden</button>
-    </div>
-
-    <footer class="center">Füge deine Firebase-Konfiguration unten ein und aktiviere die Sign-In-Methoden.</footer>
+    <button id="signoutBtn" class="btn">Abmelden</button>
   </main>
 
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import {
       getAuth,
       createUserWithEmailAndPassword,
@@ -76,176 +111,80 @@
       signOut,
       GoogleAuthProvider,
       signInWithPopup,
-      onAuthStateChanged,
       sendEmailVerification,
       sendPasswordResetEmail,
-      fetchSignInMethodsForEmail
-    } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-    // === Firebase config (ersetzen!) ===
+    // 🔧 HIER deine Firebase-Daten eintragen
     const firebaseConfig = {
     apiKey: "AIzaSyAzLiT6zrh9SCLyun_YTc6cSlmzt1Ac7NQ",
-      authDomain: "auth-6aeb3.firebaseapp.com",
-      projectId: "auth-6aeb3"
+    authDomain: "auth-6aeb3.firebaseapp.com",
+    projectId: "auth-6aeb3"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const googleProvider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();
 
-    // DOM
-    const statusEl = document.getElementById('status');
-    const userEl = document.getElementById('user');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const signupBtn = document.getElementById('signupBtn');
-    const signinBtn = document.getElementById('signinBtn');
-    const signoutBtn = document.getElementById('signoutBtn');
-    const resendBtn = document.getElementById('resendBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const verifyBox = document.getElementById('verifyBox');
-    const googleBtn = document.getElementById('googleBtn');
-    const checkVerifiedBtn = document.getElementById('checkVerifiedBtn');
+    const form = document.getElementById("authForm");
+    const statusEl = document.getElementById("status");
+    const userInfo = document.getElementById("userInfo");
+    const verifyBox = document.getElementById("verifyBox");
 
-    // Utility: Buttons kurz deaktivieren während Requests
-    function setBusy(flag) {
-      [signupBtn, signinBtn, signoutBtn, resendBtn, resetBtn, googleBtn, checkVerifiedBtn].forEach(b=>{
-        if (!b) return;
-        b.disabled = flag;
-        b.style.opacity = flag ? 0.7 : 1;
-      });
-    }
+    const emailValue = () => form.email.value.trim();
+    const passwordValue = () => form.password.value;
 
-    // UI: render current user info
-    function renderUser(user) {
-      if (!user) {
-        statusEl.textContent = 'Nicht verbunden';
-        userEl.textContent = 'Kein Benutzer angemeldet';
-        verifyBox.style.display = 'none';
+    function renderUser(user){
+      if(!user){
+        statusEl.textContent = "Nicht verbunden";
+        userInfo.textContent = "Kein Benutzer angemeldet";
+        verifyBox.style.display = "none";
         return;
       }
-
-      statusEl.textContent = 'Angemeldet';
-      userEl.innerHTML = `
-        <strong>UID:</strong> ${user.uid}<br>
-        <strong>E-Mail:</strong> ${user.email || '—'}<br>
-        <strong>Verifiziert:</strong> ${user.emailVerified ? 'ja' : 'nein'}
+      statusEl.textContent = "Angemeldet";
+      userInfo.innerHTML = `
+        <strong>E-Mail:</strong> ${user.email}<br>
+        <strong>Verifiziert:</strong> ${user.emailVerified ? "ja" : "nein"}
       `;
-      verifyBox.style.display = user.emailVerified ? 'none' : 'block';
+      verifyBox.style.display = user.emailVerified ? "none" : "block";
     }
 
-    // === Auth handlers ===
-    signupBtn.addEventListener('click', async () => {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-      if (!email || !password) return alert('Bitte Email und Passwort eingeben.');
-      setBusy(true);
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await sendEmailVerification(cred.user);
-        alert('Registrierung erfolgreich — Bestätigungs-Mail gesendet.');
-      } catch (err) {
-        console.error(err);
-        alert('Fehler bei Registrierung: ' + err.message);
-      } finally { setBusy(false); }
-    });
+    signupBtn.onclick = async () => {
+      const cred = await createUserWithEmailAndPassword(auth, emailValue(), passwordValue());
+      await sendEmailVerification(cred.user);
+      alert("Registriert – bitte E-Mail bestätigen");
+    };
 
-    signinBtn.addEventListener('click', async () => {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-      if (!email || !password) return alert('Bitte Email und Passwort eingeben.');
-      setBusy(true);
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert('Erfolgreich eingeloggt.');
-      } catch (err) {
-        console.error(err);
-        alert('Fehler beim Einloggen: ' + err.message);
-      } finally { setBusy(false); }
-    });
+    signinBtn.onclick = async () => {
+      await signInWithEmailAndPassword(auth, emailValue(), passwordValue());
+    };
 
-    // Passwort-Reset mit optionaler Demo-Prüfung (nicht empfohlen in Prod!)
-    resetBtn.addEventListener('click', async () => {
-      const email = emailInput.value.trim();
-      if (!email) return alert('Bitte gib deine E-Mail-Adresse ein.');
-      setBusy(true);
-      try {
-        // Demo-Prüfung: existiert Konto? (WICHTIG: in Produktivsystemen besser nicht nutzen)
-        const methods = await fetchSignInMethodsForEmail(auth, email);
-        if (methods.length === 0) {
-          alert('Für diese E-Mail existiert kein Konto.');
-        } else {
-          await sendPasswordResetEmail(auth, email);
-          alert('Passwort-Reset-Mail wurde gesendet.');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Fehler beim Passwort-Reset: ' + err.message);
-      } finally { setBusy(false); }
-    });
+    resetBtn.onclick = async () => {
+      await sendPasswordResetEmail(auth, emailValue());
+      alert("Reset-Mail wurde gesendet (falls Konto existiert)");
+    };
 
-    resendBtn.addEventListener('click', async () => {
-      if (!auth.currentUser) return alert('Bitte zuerst einloggen.');
-      setBusy(true);
-      try {
-        await sendEmailVerification(auth.currentUser);
-        alert('Bestätigungs-Mail erneut gesendet.');
-      } catch (err) {
-        console.error(err);
-        alert('Fehler beim Senden: ' + err.message);
-      } finally { setBusy(false); }
-    });
+    resendBtn.onclick = async () => {
+      await sendEmailVerification(auth.currentUser);
+      alert("Bestätigungs-Mail erneut gesendet");
+    };
 
-    checkVerifiedBtn.addEventListener('click', async () => {
-      if (!auth.currentUser) return alert('Bitte zuerst einloggen.');
-      setBusy(true);
-      try {
-        // reload aktualisiert die user.info (u.a. emailVerified)
-        await auth.currentUser.reload();
-        renderUser(auth.currentUser);
-        if (auth.currentUser.emailVerified) {
-          alert('E-Mail ist bestätigt — du bleibst jetzt eingeloggt.');
-        } else {
-          alert('Noch nicht bestätigt. Bitte prüfen, ob du den Link in der Mail geklickt hast.');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Fehler beim Prüfen: ' + err.message);
-      } finally { setBusy(false); }
-    });
+    googleBtn.onclick = async () => {
+      await signInWithPopup(auth, provider);
+    };
 
-    googleBtn.addEventListener('click', async () => {
-      setBusy(true);
-      try {
-        await signInWithPopup(auth, googleProvider);
-      } catch (err) {
-        console.error(err);
-        alert('Fehler bei Google Anmeldung: ' + err.message);
-      } finally { setBusy(false); }
-    });
+    signoutBtn.onclick = async () => {
+      await signOut(auth);
+    };
 
-    signoutBtn.addEventListener('click', async () => {
-      setBusy(true);
-      try {
-        await signOut(auth);
-        alert('Abgemeldet');
-      } catch (err) {
-        console.error(err);
-        alert('Fehler beim Abmelden: ' + err.message);
-      } finally { setBusy(false); }
-    });
-
-    // Auth status observer + Login-Sperre (nicht verifizierte Nutzer werden ausgeloggt)
     onAuthStateChanged(auth, async (user) => {
       renderUser(user);
-      if (user && !user.emailVerified) {
-        // Demo-Policy: wir erlauben Login nicht, bis verifiziert.
-        // In echten Apps ggf. nur Features einschränken statt ausloggen.
-        alert('Bitte bestätige zuerst deine E-Mail-Adresse.');
+      if(user && !user.emailVerified){
+        alert("Bitte E-Mail bestätigen");
         await signOut(auth);
       }
     });
-
   </script>
 </body>
 </html>
