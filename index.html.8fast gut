@@ -70,16 +70,17 @@
 <body>
   <main class="card">
     <h1>Firebase Auth – Demo</h1>
-    <p class="lead">Email/Passwort · Google · Verifikation · Reset</p>
+    <p class="lead">Einfach, mobil & vollständig kommentiert</p>
 
     <div id="status" class="small">Nicht verbunden</div>
 
+    <!-- Auth-Form -->
     <form id="authForm" onsubmit="return false;">
       <label>E-Mail</label>
-      <input type="email" name="email" required>
+      <input type="email" name="email" placeholder="name@beispiel.de" required>
 
       <label>Passwort</label>
-      <input type="password" name="password" required>
+      <input type="password" name="password" placeholder="mind. 6 Zeichen" required>
 
       <div class="row">
         <button id="signupBtn" class="btn" type="button">Registrieren</button>
@@ -112,11 +113,10 @@
       signInWithPopup,
       sendEmailVerification,
       sendPasswordResetEmail,
-      fetchSignInMethodsForEmail,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-    // 🔧 Firebase-Konfiguration
+    // 🔧 HIER deine Firebase-Daten eintragen
     const firebaseConfig = {
     apiKey: "AIzaSyAzLiT6zrh9SCLyun_YTc6cSlmzt1Ac7NQ",
     authDomain: "auth-6aeb3.firebaseapp.com",
@@ -132,8 +132,8 @@
     const userInfo = document.getElementById("userInfo");
     const verifyBox = document.getElementById("verifyBox");
 
-    const email = () => form.email.value.trim();
-    const password = () => form.password.value;
+    const emailValue = () => form.email.value.trim();
+    const passwordValue = () => form.password.value;
 
     function renderUser(user){
       if(!user){
@@ -150,36 +150,19 @@
       verifyBox.style.display = user.emailVerified ? "none" : "block";
     }
 
-    // ✅ PATCH: intelligente Registrierung
     signupBtn.onclick = async () => {
-      const mail = email();
-      const pass = password();
-      if(!mail || !pass) return alert("Bitte E-Mail und Passwort eingeben");
-
-      const methods = await fetchSignInMethodsForEmail(auth, mail);
-
-      if(methods.includes("google.com")){
-        alert("Für diese E-Mail ist die Google-Anmeldung registriert. Bitte »Mit Google anmelden« verwenden.");
-        return;
-      }
-
-      if(methods.includes("password")){
-        alert("Für diese E-Mail existiert bereits ein Konto. Bitte einloggen oder Passwort zurücksetzen.");
-        return;
-      }
-
-      const cred = await createUserWithEmailAndPassword(auth, mail, pass);
+      const cred = await createUserWithEmailAndPassword(auth, emailValue(), passwordValue());
       await sendEmailVerification(cred.user);
       alert("Registriert – bitte E-Mail bestätigen");
     };
 
     signinBtn.onclick = async () => {
-      await signInWithEmailAndPassword(auth, email(), password());
+      await signInWithEmailAndPassword(auth, emailValue(), passwordValue());
     };
 
     resetBtn.onclick = async () => {
-      await sendPasswordResetEmail(auth, email());
-      alert("Falls ein Konto existiert, wurde eine Reset-Mail gesendet");
+      await sendPasswordResetEmail(auth, emailValue());
+      alert("Reset-Mail wurde gesendet (falls Konto existiert)");
     };
 
     resendBtn.onclick = async () => {
