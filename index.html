@@ -175,6 +175,9 @@
 */
         if(mail.includes("@gmail.com")){
           alert("Für diese E-Mail ist die Google-Anmeldung registriert.\nBitte »Mit Google anmelden« verwenden.");
+
+      await signInWithPopup(auth, provider);
+
           return;
         }
 
