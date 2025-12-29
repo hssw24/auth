@@ -162,8 +162,18 @@
 
       try {
         const methods = await fetchSignInMethodsForEmail(auth, mail);
+/*
+  if (email.includes('@gmail.com')) {
+    result.textContent = "Das ist eine Gmail-Adresse!";
+    result.style.color = "green";
+  } else {
+    result.textContent = "Das ist keine Gmail-Adresse.";
+    result.style.color = "red";
+  }
 
-        if(methods.includes("google.com")){
+
+*/
+        if(mail.includes("@gmail.com")){
           alert("Für diese E-Mail ist die Google-Anmeldung registriert.\nBitte »Mit Google anmelden« verwenden.");
           return;
         }
