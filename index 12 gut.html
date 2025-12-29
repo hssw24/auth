@@ -156,16 +156,6 @@
     signupBtn.onclick = async () => {
       const mail = email();
       const pass = password();
-      
-              if(mail.includes("@gmail.com")){
-          alert("Für diese E-Mail ist die Google-Anmeldung registriert.\nBitte »Mit Google anmelden« verwenden.");
-
-      await signInWithPopup(auth, provider);
-
-          return;
-        }
-      
-      
       if(!mail || !pass) return alert("Bitte E-Mail und Passwort eingeben");
 
       isSigningUp = true;
@@ -173,10 +163,23 @@
       try {
         const methods = await fetchSignInMethodsForEmail(auth, mail);
 /*
-  Hier ansehen, warum die Google-Anmeldung erst nach Pw funktioniert.
+  if (email.includes('@gmail.com')) {
+    result.textContent = "Das ist eine Gmail-Adresse!";
+    result.style.color = "green";
+  } else {
+    result.textContent = "Das ist keine Gmail-Adresse.";
+    result.style.color = "red";
+  }
+
 
 */
+        if(mail.includes("@gmail.com")){
+          alert("Für diese E-Mail ist die Google-Anmeldung registriert.\nBitte »Mit Google anmelden« verwenden.");
 
+      await signInWithPopup(auth, provider);
+
+          return;
+        }
 
         if(methods.includes("password")){
           alert("Für diese E-Mail existiert bereits ein Konto.\nBitte einloggen oder Passwort zurücksetzen.");
