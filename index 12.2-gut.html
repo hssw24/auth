@@ -8,18 +8,12 @@
   <style>
     :root{
       --bg:#f7fafc; --card:#ffffff; --text:#0f172a; --muted:#475569;
-//      --border:#e2e8f0;
-      --border:green;
-      --box-shadow:0 4px 6px red;
-      --primary:#2563eb; --info:#f1f5f9;
+      --border:#e2e8f0; --primary:#2563eb; --info:#f1f5f9;
     }
     @media (prefers-color-scheme:dark){
       :root{
         --bg:#0b1220; --card:#071023; --text:#e6eef8; --muted:#94a3b8;
-//        --border:#102036;      
-        --border:green;
-        --box-shadow:0 4px 6px red;
-        --primary:#3b82f6; --info:#0f1a33;
+        --border:#102036; --primary:#3b82f6; --info:#0f1a33;
       }
     }
     body{
@@ -40,7 +34,7 @@
     .lead{margin:0 0 16px;color:var(--muted);font-size:14px}
     label{display:block;margin-top:12px;font-size:13px}
     input{
-      width:100%; max-width:92%; padding:12px;
+      width:100%; padding:12px;
       margin-top:6px;
       border-radius:8px;
       border:1px solid var(--border);
@@ -54,7 +48,6 @@
       margin-top:12px;
       font-size:15px;
       border:1px solid var(--border);
-      box-shadow: 0 4px 6px red;
       background:transparent;
       color:var(--text);
     }
@@ -76,7 +69,7 @@
 
 <body>
   <main class="card">
-    <h1>Firebase Auth – Demo 13</h1>
+    <h1>Firebase Auth – Demo 12</h1>
     <p class="lead">Email/Passwort · Google · Verifikation · Reset</p>
 
     <div id="status" class="small">Nicht verbunden</div>
@@ -173,7 +166,7 @@
         }
       
       
-      if(!mail || !pass) return alert("Bitte E-Mail und Passwort eingeben.");
+      if(!mail || !pass) return alert("Bitte E-Mail und Passwort eingeben");
 
       isSigningUp = true;
 
@@ -208,14 +201,14 @@
       
       const mail = email();
       const pass = password();
-      if(!mail || !pass) return alert("Bitte E-Mail und Passwort eingeben.");
+      if(!mail || !pass) return alert("Bitte E-Mail und Passwort eingeben");
       try{
       await signInWithEmailAndPassword(auth, email(), password());
 //    
       }
       catch(err){
-        console.error("login error:", err);
-        alert("Login fehlgeschlagen:\n" + err.message);
+        console.error("abc error:", err);
+        alert("xyz fehlgeschlagen:\n" + err.message);
       }     
       
       
@@ -226,7 +219,7 @@
       
       const mail = email();
 //      const pass = password();
-      if(!mail) return alert("Bitte E-Mail eingeben.");
+      if(!mail) return alert("Bitte E-Mail eingeben");
       
       await sendPasswordResetEmail(auth, email());
       alert("Falls ein Konto existiert, wurde eine Reset-Mail gesendet.");
